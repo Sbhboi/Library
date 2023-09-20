@@ -1,0 +1,24 @@
+<h1>All Books</h1>
+<ul>
+    <% @books.each do |book| %>
+    <li>
+        <a href="/books/<%= book.id %>">
+            <%= book.title %>
+        </a>
+        <%= book.title %> by <%= book.author %>
+        <form action="/books/edit/<%= book.id %>" method="post" style="display:inline;">
+            <button type="submit">Edit</button>
+        </form>
+        <form action="/books/delete/<%= book.id %>" method="post" style="display:inline;">
+            <button type="submit">Delete</button>
+        </form>
+        <ul>
+            <% book.reviews.each do |review| %>
+            <li><%= review.content %> by <%= review.name %></li>
+            <% end %>
+        </ul>
+    </li>
+    <% end %>
+</ul>
+<hr>
+<a href="/">Add Book</a>
