@@ -1,8 +1,12 @@
 require 'sinatra'
 require 'sinatra/activerecord'
+require 'bcrypt'
 
 require_relative 'models/book.rb'
 require_relative 'models/review.rb'
+require_relative 'models/user.rb'
+
+enable :sessions
 
 get '/' do
     erb :index
@@ -65,4 +69,47 @@ post '/books/:id/comment' do
     else
         erb :comment
     end
+end
+
+get '/register' do
+    erb :register
+end
+
+post '/register' do
+    puts "Username: #{params[:username]}"
+    puts "Password: #{params[:password]}"
+    @user = User.new(username: params[:username], password: params[:password])
+    if @user.save
+      redirect '/registration-success'
+    else
+      puts @user.errors.full_messages # Print any validation errors to the console
+      erb :register, locals: { user: @user }
+    end
+end
+
+get '/registration-success' do
+    erb :registration_success
+end
+
+get '/login' do
+    erb :login
+end
+
+post '/login' do
+    @user = User.find_by(username: params[:username])
+    if @user && @user.authenticate(params[:password])
+      session[:user_id] = @user.id
+      redirect "/?username=#{params[:username]}"
+    else
+      erb :login
+    end
+end
+
+def current_user
+    @current_user ||= User.find_by(id: session{:user_id})
+end
+
+get '/logout' do
+    session.clear
+    redirect '/'
 end

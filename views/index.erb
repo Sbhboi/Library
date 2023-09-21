@@ -1,4 +1,7 @@
 <h1>Book Library</h1>
+<% if params[:username] %>
+    <p>Welcome, <%= params[:username] %> !</p>
+<% end %>
 
 <form action="/add-book" method="post">
     Title: <input type="text" name="title">
@@ -6,4 +9,13 @@
     <input type="submit" value="Submit">
 </form>
 <hr>
+<form action="/register" method="get">
+    <input type="submit" value="Register">
+</form>
+<form action="/login" method="get">
+    <input type="submit" value="Login">
+</form>
+<hr>
 <a href="/books">All Books</a>
+<hr>
+<a href="/logout"> Logout </a>
